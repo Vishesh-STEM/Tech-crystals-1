@@ -1,0 +1,22 @@
+# Vidyalaya AI - backend core requirements (all free / open source)
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.27
+sqlalchemy>=2.0,<2.2
+alembic>=1.13
+pydantic>=2.6,<3.0
+pydantic-settings>=2.2
+python-dotenv>=1.0
+PyJWT>=2.8
+bcrypt>=4.1                 # optional: PBKDF2-SHA256 is used automatically if absent
+httpx>=0.27                 # Ollama client + Moodle web services
+python-multipart>=0.0.9
+psycopg2-binary>=2.9        # PostgreSQL driver (SQLite needs no driver)
+# psycopg[binary]>=3.1       # alternative driver: use postgresql+psycopg:// in DATABASE_URL
+
+# Local ML / embeddings - no downloads, no API keys
+scikit-learn>=1.4
+numpy>=1.26
+joblib>=1.3
+
+# Optional extras live in requirements-ai.txt:
+#   chromadb, sentence-transformers

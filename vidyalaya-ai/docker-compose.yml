@@ -1,0 +1,86 @@
+version: "3.9"
+
+# Vidyalaya AI - one command to run the whole platform:
+#   docker compose up --build
+#
+# Services
+#   db        PostgreSQL 16 (production database)
+#   backend   FastAPI + SQLAlchemy (seeds itself on first start)
+#   frontend  React build served by nginx on http://localhost:5173
+#   ollama    optional local LLM  ->  docker compose --profile ai up --build
+#
+# Without the "ai" profile the AI tutor runs in offline mode and the site
+# still works end to end.
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: vidyalaya-db
+    environment:
+      POSTGRES_USER: vidyalaya
+      POSTGRES_PASSWORD: vidyalaya
+      POSTGRES_DB: vidyalaya
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vidyalaya"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: vidyalaya-backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg2://vidyalaya:vidyalaya@db:5432/vidyalaya
+      SQLITE_FALLBACK_URL: sqlite:///./data/vidyalaya.db
+      ALLOW_SQLITE_FALLBACK: "true"
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production-please-use-a-long-random-string}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://ollama:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2:1b}
+      VECTOR_BACKEND: ${VECTOR_BACKEND:-chroma}
+      CHROMA_DIR: /app/data/chroma
+      SEED_ON_STARTUP: "true"
+      CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+    ports:
+      - "8000:8000"
+    volumes:
+      - backend_data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import httpx;httpx.get('http://localhost:8000/api/health',timeout=5)\""]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    container_name: vidyalaya-frontend
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: vidyalaya-ollama
+    profiles: ["ai"]
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    # After the container starts, pull a small free model:
+    #   docker exec -it vidyalaya-ollama ollama pull llama3.2:1b
+
+volumes:
+  db_data:
+  backend_data:
+  ollama_models:

@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-ink-50 text-ink-900 font-sans antialiased;
+  }
+  .dark body {
+    @apply bg-ink-950 text-ink-100;
+  }
+  ::selection {
+    @apply bg-brand-200 text-brand-900;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-ink-200/70 bg-white shadow-card transition-colors dark:border-white/10 dark:bg-ink-900;
+  }
+  .card-hover {
+    @apply hover:-translate-y-0.5 hover:shadow-lift transition-all duration-200;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus-visible:ring-offset-ink-900;
+  }
+  .btn-primary {
+    @apply btn bg-brand-600 text-white hover:bg-brand-700 active:scale-[0.98];
+  }
+  .btn-secondary {
+    @apply btn border border-ink-200 bg-white text-ink-700 hover:bg-ink-50 dark:border-white/10 dark:bg-ink-800 dark:text-ink-100 dark:hover:bg-ink-700;
+  }
+  .btn-ghost {
+    @apply btn text-ink-600 hover:bg-ink-100 dark:text-ink-300 dark:hover:bg-white/5;
+  }
+  .input {
+    @apply w-full rounded-xl border border-ink-200 bg-white px-3.5 py-2.5 text-sm text-ink-900 placeholder-ink-400 outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100 dark:border-white/10 dark:bg-ink-800 dark:text-ink-50 dark:focus:ring-brand-900;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-ink-700 dark:text-ink-200;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold;
+  }
+  .section-title {
+    @apply font-display text-lg font-semibold text-ink-900 dark:text-white;
+  }
+  .muted {
+    @apply text-sm text-ink-500 dark:text-ink-400;
+  }
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-ink-300 dark:bg-ink-700;
+}
+
+.prose-vidya h2 {
+  @apply mb-2 mt-4 font-display text-lg font-semibold;
+}
+.prose-vidya h3 {
+  @apply mb-2 mt-4 font-display text-base font-semibold;
+}
+.prose-vidya p {
+  @apply mb-3 leading-relaxed;
+}
+.prose-vidya ul {
+  @apply mb-3 list-disc space-y-1.5 pl-5;
+}
+.prose-vidya ol {
+  @apply mb-3 list-decimal space-y-1.5 pl-5;
+}
+.prose-vidya code {
+  @apply rounded bg-ink-100 px-1.5 py-0.5 font-mono text-[0.85em] dark:bg-white/10;
+}
+.prose-vidya strong {
+  @apply font-semibold text-ink-900 dark:text-white;
+}

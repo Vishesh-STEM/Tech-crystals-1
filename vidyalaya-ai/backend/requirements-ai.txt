@@ -1,0 +1,9 @@
+# Optional AI extras. The platform works fully without them:
+#   - ChromaDB   -> used automatically when installed (VECTOR_BACKEND=chroma).
+#                   Otherwise the built-in numpy/JSON vector store is used.
+#   - sentence-transformers -> free local embedding model
+#                   (set EMBEDDING_BACKEND=sentence-transformers to enable).
+#   - pinecone    -> only if you migrate the vector store to Pinecone later.
+chromadb>=0.5.0
+sentence-transformers>=3.0.0
+# pinecone>=5.0.0
